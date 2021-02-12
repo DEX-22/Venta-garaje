@@ -1,7 +1,7 @@
 var app = new Vue({
     el: '#app',
     data: {
-        Saludo: 'Bienvenido a la venta de garage',
+        Saludo: 'Bienvenido a la venta de garaje',
         Product: 'Bicicleta OXF Aro 26 Kenda',
         Imagen: 'Imagenes/bici1.jpg',
         Cantidad:  10, 
