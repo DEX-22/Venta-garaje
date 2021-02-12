@@ -1,0 +1,29 @@
+#app{
+    display: grid;
+    grid-template-rows: 100px auto;
+    grid-template-areas: " nav-bar "
+                         "product";
+}
+.nav-bar{
+    grid-area: nav-bar;
+}
+.product{
+    grid-area: product;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+.product-image{
+    grid-area: producto-img;
+}
+.product-info{
+    grid-area: producto-info;
+}
+.color{
+    display: flex;
+    flex-direction: row;
+}
+.color div{
+    margin-left: 10px;
+}
+

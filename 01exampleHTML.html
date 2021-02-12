@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="//cdn.wf/fontawesome/font-awesome.min.css">
+    <link rel="stylesheet" href="grid.css">
+    <link rel="stylesheet" href="01styles.css">
+    
+    <title>Document</title>
+</head>
+<body >
+
+    <div id="app">
+        <div class="nav-bar">
+            <center><h1 id="et">{{Saludo}}</h1></center>
+        </div>
+    
+    
+        <div class="product" id="producto">
+            
+            
+            <div class="product-image">
+                <img v-bind:src="Imagen" alt="esta es la imagen del primer producto">
+    
+            </div>
+            <div class="product-info">
+               <h2>{{Product}}</h2> 
+               <p id="etiqueta-stock"
+                  class="active">
+                  Quedan {{Cantidad}} unidades</p>
+               <p v-if="Cantidad>=10">In stock</p>
+                <p v-else-if="Cantidad > 0 && 10 > Cantidad">Ultimos productoos!!</p>
+               <p v-else> Out of stock</p>
+               
+               <h5> Caracteristicas:</h5>
+               <ul>
+                <li v-for="(name, value) in Details"><b>{{value}}</b>: {{name}}</li>
+            </ul>
+           
+              
+
+
+               
+                <div class="color">Color
+               
+                        <div v-for="variante in Variant" 
+                            :key="variante.variantId"
+                             class="color-box" 
+                            :style="{ backgroundColor: variante.variantColor }"
+                            @mouseover="updateProduct(variante.variantImage)">
+                        
+                        
+                
+                </div>
+            </div>
+            
+            
+            <!--en vue.js para llamar al evento click hay 2 formas:-->    
+            <!-- la primera -->
+            <button class="btn "
+                        v-on:click="addToCar"
+                        :disabled="!inStock"
+                        :class="{ active:inStock , 'btn-desactivado':!inStock }">
+                          Add to car</button>
+            <div class="car">
+                <p>Carrito({{car}})</p>
+                <!-- la 2da -->
+                <div @click="quitFromCar" style="cursor: pointer"> Quitar</div>
+            </div>
+            
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+    <script src="01example.js"></script>
+</body>
+</html>
