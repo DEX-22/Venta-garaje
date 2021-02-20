@@ -1,7 +1,50 @@
+Vue.component('product-review',{
+    template:`
+
+
+    
+        <input v-model="name">
+    `,
+    data(){
+        return {
+        name: null, 
+        }
+    },
+
+})
+Vue.component('Details',{
+    
+    template:`<ul>
+             <li v-for="(name, value) in Details"><b>{{value}}</b>: {{name}}</li>
+              </ul>`,
+    data(){
+        return{
+            Details:{
+                        Marca :	'JEFF BIKE',
+                        Aro:    	26,
+                        Modelo:	'OXF26G-9R',
+                        Asiento:	'Aluminio',
+                        Hecho:	'China',
+                        Llantas	:'Unisex',
+                        Manubrio:	'Aluminio',
+                    },
+                }
+            },
+    
+        })
+
 
 Vue.component('producto', {
-    
-    
+    props:{
+        premium:{
+            type: Boolean,
+            required: true
+        },
+        car:{
+            type: Array,
+        },
+        
+    },
     template: `<div id="container">
             
         <div class="nav-bar">
@@ -19,19 +62,18 @@ Vue.component('producto', {
             </div>
 
 
-                            <div class="product-info">
+                        <div class="product-info">
                             <h2>{{Product}}</h2> 
                             <p id="etiqueta-stock"
                                 class="active">
-                                Quedan {{Cantidad}} unidades
+                                Quedan {{Cantidad}} unidades 
                             </p>
+                            <p style="text-align: left;">Shipping: {{shipping}}</p>
                             <p v-if="Cantidad>=10">In stock</p>
                             <p v-else-if="Cantidad > 0 && 10 > Cantidad">Ultimos productoos!!</p>
                             <p v-else> Out of stock</p>
                             <h5> Caracteristicas:</h5>
-                            <ul>
-                                    <li v-for="(name, value) in Details"><b>{{value}}</b>: {{name}}</li>
-                            </ul>
+                            <Details></Details>
 
 
                                         <div class="color">Color 
@@ -53,13 +95,12 @@ Vue.component('producto', {
                                                 Add to car</button>
 
 
-                                        <div class="car">
-                                            <p>Carrito({{car}})</p>
+                                       
 
                                             <!-- la 2da -->
                                             <div @click="quitFromCar" style="cursor: pointer"> Quitar</div>
                                             
-                                        </div>
+                                        
                             
                         </div>
             </div>
@@ -70,15 +111,6 @@ Vue.component('producto', {
             Product: 'Bicicleta OXF Aro 26 Kenda',
             selectedVariant: 0,
             onSale: true,
-            Details: {
-                Marca :	'JEFF BIKE',
-                Aro:    	26,
-                Modelo:	'OXF26G-9R',
-                Asiento:	'Aluminio',
-                Hecho:	'China',
-                Llantas	:'Unisex',
-                Manubrio:	'Aluminio',
-            },
             Variant:[
                 {variantId: 01,
                 variantColor: '#FDA7DF',
@@ -101,28 +133,32 @@ Vue.component('producto', {
                     variantImage: 'Imagenes/bici4.jpg',
                     variantCantidad: 0,},
                     
-                ],
-            car: 0,}
+                ],}
             },
     methods:{
         addToCar: function (){
-            if(this.inStock && this.Cantidad > 0){
-                
-                this.car += 1;
-                this.Cantidad -=1;
-                    this.inStock = true;
-                }else{
-                        this.inStock = false;
-                    alert('no hay mas productos :(');
-                }
+            if(this.inStock && this.Variant[this.selectedVariant].variantCantidad > 0){
+            this.$emit('add-to-car',this.Variant[this.selectedVariant].variantId);
+            this.Variant[this.selectedVariant].variantCantidad -=1
+            }else{
+                    this.inStock = false;
+                alert('no hay mas productos :(');
+            }
+        },
+          
+         quitFromCar: function() {
+           if(this.car.length > 0) 
+           {   
+              
+            this.Variant[this.selectedVariant].variantCantidad +=1
             
-        },
-        quitFromCar: function() {
-            if(this.car > 0){this.car -= 1;this.Cantidad+=1
-                if(this.Cantidad > 0){ this.inStock = true}
-            }else{ alert('no hay elementos en el carrito');}
+           }
+           else {
+            this.$emit('quit-from-car', this.Variant[this.selectedVariant].variantId )
+
+            alert('no hay elementos en el carrito')}
+         },    
         
-        },
         updateProduct: function(i){
             this.selectedVariant = i;
             console.log(i);
@@ -132,10 +168,10 @@ Vue.component('producto', {
             
             // return _elemento.classList.toggle('active');
             } else {
-                document.querySelector('#etiqueta-stock').classList.toggle('no-stock');
-            }
+                document.querySelector('#etiqueta-stock' ).classList.toggle('no-stock');
+            }            
         },
-        
+         
     },
     computed: {
         saludo_navbar(){
@@ -145,18 +181,40 @@ Vue.component('producto', {
             return  this.Variant[this.selectedVariant].variantImage
         },
         inStock(){
-        return this.Variant[this.selectedVariant].variantCantidad == 0 ? false : true 
+        return this.Variant[this.selectedVariant].variantCantidad > 0 ? true : false   
         },
         Cantidad(){
-            return this.Variant[this.selectedVariant].variantCantidad
+            return this.Variant[this.selectedVariant].variantCantidad //- this.car             
         },
         enVenta(){
         return onSale ? this.Product : '' 
         },
+        shipping(){            
+            return this.premium ? '50%free' : 299.99
+        },
+        
     } 
 
 })
 
 var app = new Vue({
-    el: '#app'
+    el: '#app',
+    data: {
+        premium: true,
+        car: [],
+    },
+    methods:{
+        updateCar(id){
+            this.car.push(id)
+        },
+        removeElement(id){
+            this.car.splice(id,1)
+            this.Variant[id].variantCantidad -=1
+}       
+       
+    }
+
 })
+
+
+

@@ -14,10 +14,16 @@
         
         
     <div id="app">
-            <producto></producto>
-            <producto></producto>
-            <producto></producto>
-            <producto></producto>
+            <div class="car " >
+                    <p class="right">Carrito({{ car.length }})</p></div>
+
+                   
+            <producto :premium="premium" :car="car" @add-to-car="updateCar" @quit-from-car="removeElement">
+                
+            </producto>
+
+
+
     </div>
     
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
